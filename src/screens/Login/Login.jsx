@@ -1,30 +1,17 @@
 import React, { useState, useContext } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-} from 'react-native';
-import axios from 'axios';
+import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { validateEmail, validatePassword } from '../../utils/validation';
-import colors from '../../theme/Color';
 import FancyImageButton from '../../components/FancyImageButton';
 import CustomToast from '../../components/CustomToast';
-import {AuthContext} from "../../context/AuthContext"
-
+import { AuthContext } from '../../context/AuthContext';
 
 const Login = ({ navigation }) => {
-  const {login} = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({ email: '', password: '' });
-  const [toast, setToast] = useState({
-    visible: false,
-    message: '',
-    type: 'info',
-  });
+  const [toast, setToast] = useState({ visible: false, message: '', type: 'info' });
 
   const showToast = (message, type = 'info') => {
     setToast({ visible: true, message, type });
@@ -46,34 +33,34 @@ const Login = ({ navigation }) => {
     }
 
     try {
-      const response = await axios.post('http://192.168.100.2:3000/login', formData);
+      // Fake login response
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = {
+        status: 200,
+        data: {
+          token: 'dummy-token-123',
+          user: { id: 1, name: 'Dummy User', email: formData.email }
+        }
+      };
 
       if (response.status === 200) {
-    
-        console.log('Login response:', response.data);
-        const {token, user} = response.data;
-        console.log('Token & user:', token, user);
+        const { token, user } = response.data;
         await login(user, token);
-            showToast('Login successful! 🎉', 'success');
-        navigation.navigate("MainApp")
-  
+        showToast('Login successful!', 'success');
+        navigation.navigate('MainApp');
       }
     } catch (error) {
-      let msg = 'Something went wrong.';
-      if (error.response?.data?.error) {
-        msg = error.response.data.error;
-      }
-      showToast(msg, 'error');
+      showToast('Something went wrong.', 'error');
     }
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Sign In</Text>
-        <Text style={styles.subtitle}>Hi, Welcome back, you have been missed.</Text>
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="flex-1 justify-center px-6 bg-white">
+        <Text className="text-3xl font-bold text-gray-900 text-center mb-2">Sign In</Text>
+        <Text className="text-base text-gray-400 text-center mb-6">Hi, Welcome back, you have been missed.</Text>
 
-        <View style={styles.form}>
+        <View className="w-full">
           <CustomInput
             placeholder="Email"
             value={formData.email}
@@ -90,31 +77,29 @@ const Login = ({ navigation }) => {
 
           <TouchableOpacity
             onPress={() => navigation.navigate('ForgotPassword')}
-            style={styles.forgotContainer}
+            className="mb-4 items-end"
           >
-            <Text style={styles.forgotText}>Forgot Password?</Text>
+            <Text className="text-blue-600 underline text-sm">Forgot Password?</Text>
           </TouchableOpacity>
 
           <CustomButton title="Login" onPress={handleLogin} />
 
-          <View style={styles.orContainer}>
-            <View style={styles.line} />
-            <Text style={styles.orText}>Or sign with</Text>
-            <View style={styles.line} />
+          <View className="flex-row items-center my-5">
+            <View className="flex-1 h-px bg-gray-200" />
+            <Text className="mx-2.5 text-gray-400 text-sm">Or sign with</Text>
+            <View className="flex-1 h-px bg-gray-200" />
           </View>
 
-          <View style={styles.buttonContainer}>
+          <View className="flex-row justify-center">
             <FancyImageButton
               type="google"
               imageSource={require('../../assets/google-remove-bg.png')}
               onPress={() => console.log('Google pressed')}
-              containerStyle={styles.authButton}
             />
             <FancyImageButton
               type="apple"
               imageSource={require('../../assets/Iphone.png')}
               onPress={() => console.log('Apple ID')}
-              containerStyle={styles.authButton}
             />
           </View>
         </View>
@@ -124,65 +109,5 @@ const Login = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-    backgroundColor: colors.background,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: colors.text,
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: colors.placeholder,
-    textAlign: 'center',
-    marginBottom: 24,
-  },
-  form: {
-    width: '100%',
-  },
-  forgotContainer: {
-    marginBottom: 16,
-    alignItems: 'flex-end',
-  },
-  forgotText: {
-    color: colors.primary,
-    textDecorationLine: 'underline',
-    fontSize: 14,
-  },
-  orContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  line: {
-    flex: 1,
-    height: 1,
-    backgroundColor: colors.border,
-  },
-  orText: {
-    marginHorizontal: 10,
-    color: colors.placeholder,
-    fontSize: 14,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  authButton: {
-    backgroundColor: '#e9ecef',
-  },
-});
 
 export default Login;

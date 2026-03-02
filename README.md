@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./logo.png" alt="MediConnect Logo" width="160"/>
+  <img src="./src/assets/logo-bg-remove.png" alt="MediConnect Logo" width="160"/>
 </p>
 
 <h1 align="center">MediConnect – Patient Healthcare App</h1>

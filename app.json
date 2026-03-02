@@ -1,10 +1,9 @@
 {
-  "name": "MediConnect",
-  "displayName": "MediConnect",
   "expo": {
     "name": "MediConnect",
     "slug": "mediconnect",
     "version": "1.0.0",
+    "userInterfaceStyle": "automatic",
     "assetBundlePatterns": [
       "**/*"
     ]

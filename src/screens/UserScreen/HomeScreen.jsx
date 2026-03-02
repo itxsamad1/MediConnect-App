@@ -1,16 +1,15 @@
-import React, {useContext} from 'react';
-import { StyleSheet, ScrollView} from 'react-native'
+import React from 'react';
+import { ScrollView } from 'react-native';
 import Headers from '../../components/HomeScreen/Header';
 import HealthStatusCard from '../../components/HomeScreen/HealthStatusCard';
 import Upcoming from '../../components/HomeScreen/UpcomingAppionment';
 import QuickAction from '../../components/HomeScreen/QuickAction';
 import RecentActivity from '../../components/HomeScreen/RecentActivity';
 import HealthTip from '../../components/HomeScreen/HealthTip';
-import colors from '../../theme/Color';
 
 export function HomeScreen() {
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView className="flex-1 bg-gray-50" showsVerticalScrollIndicator={false}>
       <Headers />
       <HealthStatusCard />
       <Upcoming />
@@ -20,12 +19,5 @@ export function HomeScreen() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-});
 
 export default HomeScreen;
