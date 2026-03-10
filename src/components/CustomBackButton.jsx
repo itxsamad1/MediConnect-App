@@ -1,31 +1,31 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet, View } from 'react-native';
+import { TouchableOpacity, View, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useTheme } from '../context/ThemeContext';
 
 const CustomBackButton = ({ onPress }) => {
+  const { colors } = useTheme();
   return (
-    <View style={styles.buttonContainer}>
-    <TouchableOpacity style={styles.button} onPress={onPress} activeOpacity={0.7}>
-      <Ionicons name="arrow-back" size={22} color="black" />
-    </TouchableOpacity>
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: colors.surfaceSecondary }]}
+        onPress={onPress}
+        activeOpacity={0.7}
+      >
+        <Ionicons name="arrow-back" size={22} color={colors.text} />
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  buttonContainer:{   
-    width: '100%',
-     marginTop: 60,
-     paddingHorizontal: 10,
-    },
+  container: { width: '100%', marginTop: 55, paddingHorizontal: 16 },
   button: {
-    width: 30,
-    height: 30,
-    backgroundColor: '#d3d3d3', 
+    width: 38,
+    height: 38,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 2,
-   
   },
 });
 

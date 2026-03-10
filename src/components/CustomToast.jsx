@@ -1,44 +1,42 @@
-// components/CustomToast.js
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
+
+const BACKGROUNDS = {
+  success: '#16a34a',
+  error: '#dc2626',
+  info: '#3470c3',
+  warning: '#d97706',
+};
 
 const CustomToast = ({ type = 'info', message = '', visible }) => {
   if (!visible) return null;
+  const bg = BACKGROUNDS[type] || BACKGROUNDS.info;
 
   return (
-    <View style={[styles.toastContainer, styles[type]]}>
-      <Text style={styles.toastText}>{message}</Text>
+    <View style={[styles.container, { backgroundColor: bg }]}>
+      <Text style={styles.text}>{message}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  toastContainer: {
+  container: {
     position: 'absolute',
     top: 20,
     left: 20,
     right: 20,
     paddingVertical: 12,
     paddingHorizontal: 18,
-    borderRadius: 8,
+    borderRadius: 10,
     zIndex: 1000,
-    elevation: 5,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
-  toastText: {
-    color: 'white',
-    fontSize: 15,
-    fontWeight: '500',
-    textAlign: 'center',
-  },
-  success: {
-    backgroundColor: '#2ecc71',
-  },
-  error: {
-    backgroundColor: '#e74c3c',
-  },
-  info: {
-    backgroundColor: '#3498db',
-  },
+  text: { color: '#fff', fontSize: 14, fontWeight: '600', textAlign: 'center' },
 });
 
 export default CustomToast;

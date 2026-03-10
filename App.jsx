@@ -1,62 +1,75 @@
-// App.js
 import './global.css';
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import SplashScreen from './src/screens/Splash/SplashScreen';
-import SplashCore from './src/screens/Splash/SplashCore';
-import Login from './src/screens/Login/Login';
-import Signup from './src/screens/Signup/Signup';
-import NewPasswordScreen from './src/screens/NewPassword/NewPasswordScreen';
-import OTP from './src/screens/OTP/OTP';
-import ForgotPassword from './src/screens/ForgetPassword/ForgotPassword';
-import BottomTabs from './src/screens/Navigation/BottomTabs';
-import MedicalProfileScreen from './src/screens/ProfileSetup/MedicalProfileScreen';
-
+// Context
 import { AuthProvider, AuthContext } from './src/context/AuthContext';
-import HomeScreen from './src/screens/UserScreen/HomeScreen';
+import { ThemeProvider, useTheme } from './src/context/ThemeContext';
+
+// Auth Screens
+import SplashScreen from './src/features/splash/SplashScreen';
+import SplashCore from './src/features/splash/SplashCore';
+import LoginScreen from './src/features/auth/LoginScreen';
+import SignupScreen from './src/features/auth/SignupScreen';
+import NewPasswordScreen from './src/features/auth/NewPasswordScreen';
+import OTPScreen from './src/features/auth/OTPScreen';
+import ForgotPasswordScreen from './src/features/auth/ForgotPasswordScreen';
+import MedicalProfileScreen from './src/features/profile/MedicalProfileScreen';
+
+// App Navigation
+import BottomTabs from './src/navigation/BottomTabs';
 
 const Stack = createNativeStackNavigator();
 
 function RootNavigator() {
   const { user, loading } = useContext(AuthContext);
-  if (loading) {
-    return <SplashCore />;
-  }
+  const { isDark } = useTheme();
+
+  if (loading) return <SplashCore />;
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {user ? (
         <Stack.Screen name="MainApp" component={BottomTabs} />
       ) : (
-
         <>
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Signup" component={Signup} />
-          <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-          <Stack.Screen name="OTP" component={OTP} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Signup" component={SignupScreen} />
+          <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+          <Stack.Screen name="OTP" component={OTPScreen} />
           <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
           <Stack.Screen name="MedicalProfileScreen" component={MedicalProfileScreen} />
-          <Stack.Screen name="HomeScreen" component={HomeScreen} />
         </>
       )}
     </Stack.Navigator>
   );
 }
 
-function App() {
+function AppContent() {
+  const { isDark, colors } = useTheme();
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <AuthProvider>
-        <NavigationContainer>
-          <RootNavigator />
-        </NavigationContainer>
-      </AuthProvider>
+      <StatusBar
+        barStyle={isDark ? 'light-content' : 'dark-content'}
+        backgroundColor={colors.background}
+      />
+      <NavigationContainer>
+        <RootNavigator />
+      </NavigationContainer>
     </>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

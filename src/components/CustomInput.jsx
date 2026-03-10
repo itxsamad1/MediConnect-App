@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
-import {
-  TextInput,
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import { TextInput, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import colors from '../theme/Color';
+import { useTheme } from '../context/ThemeContext';
 
 const CustomInput = ({
   placeholder,
@@ -18,12 +12,11 @@ const CustomInput = ({
   inputStyle,
   containerStyle,
   multiline = false,
+  keyboardType,
+  autoCapitalize,
 }) => {
+  const { colors } = useTheme();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible(!isPasswordVisible);
-  };
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -36,78 +29,55 @@ const CustomInput = ({
           value={value}
           onChangeText={onChangeText}
           secureTextEntry={secureTextEntry && !isPasswordVisible}
-          style={StyleSheet.flatten([
+          keyboardType={keyboardType}
+          autoCapitalize={autoCapitalize}
+          style={[
             styles.input,
-            error && { borderColor: 'red' },
-            secureTextEntry && { paddingRight: 100 },
+            {
+              backgroundColor: colors.inputBackground,
+              borderColor: error ? colors.danger : colors.border,
+              color: colors.text,
+            },
+            secureTextEntry && { paddingRight: 50 },
             inputStyle,
-          ])}
-          
+          ]}
         />
         {secureTextEntry && (
-          <View style={styles.rightContainer}>
-            <TouchableOpacity
-              onPress={togglePasswordVisibility}
-              style={styles.iconContainer}
-            >
-              <Icon
-                name={isPasswordVisible ? 'eye-off' : 'eye'}
-                size={25}
-                color={colors.placeholder}
-              />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={() => setIsPasswordVisible(v => !v)}
+            style={styles.eyeIcon}
+          >
+            <Icon
+              name={isPasswordVisible ? 'eye-off' : 'eye'}
+              size={22}
+              color={colors.placeholder}
+            />
+          </TouchableOpacity>
         )}
       </View>
-      {error && <Text style={styles.error}>{error}</Text>}
+      {!!error && <Text style={[styles.error, { color: colors.danger }]}>{error}</Text>}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 16,
-  },
-  inputWrapper: {
-    position: 'relative',
-  },
+  container: { marginBottom: 14 },
+  inputWrapper: { position: 'relative' },
   input: {
-    backgroundColor: colors.inputBackground,
     borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 8,
+    borderRadius: 10,
     paddingHorizontal: 14,
-    paddingVertical: 12,
+    paddingVertical: 13,
+    fontSize: 15,
   },
-  rightContainer: {
+  eyeIcon: {
     position: 'absolute',
-    right: 10,
-    top: 12,
-    alignItems: 'center',
-  },
-  iconContainer: {
+    right: 14,
+    top: 0,
+    bottom: 0,
     justifyContent: 'center',
-    alignItems: 'center',
   },
-  forgetPasswordContainer: {
-    marginTop: 4,
-    alignItems: 'center',
-  },
-  forgetPasswordText: {
-    color: colors.placeholder,
-    fontSize: 12,
-  },
-  underline: {
-    height: 1,
-    backgroundColor: colors.placeholder,
-    width: '100%',
-    marginTop: 2,
-  },
-  error: {
-    color: 'red',
-    marginTop: 4,
-    fontSize: 12,
-  },
+  error: { marginTop: 4, fontSize: 12 },
 });
 
 export default CustomInput;
